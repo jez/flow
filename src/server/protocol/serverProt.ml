@@ -21,6 +21,7 @@ module Request = struct
   | GEN_FLOW_FILES of File_input.t list * bool (* include_warnings *)
   | GET_DEF of File_input.t * int * int (* filename, line, char *)
   | GET_IMPORTS of string list
+  | GET_MODULE of string
   | INFER_TYPE of
       File_input.t * (* filename|content *)
       int * (* line *)
@@ -57,6 +58,8 @@ module Request = struct
         (File_input.filename_of_file_input fn) line char
   | GET_IMPORTS module_names ->
       Printf.sprintf "get-imports %s" (String.concat " " module_names)
+  | GET_MODULE symbol ->
+      Printf.sprintf "get-module %s" symbol
   | INFER_TYPE (fn, line, char, _) ->
       Printf.sprintf "type-at-pos %s:%d:%d"
         (File_input.filename_of_file_input fn) line char
@@ -115,6 +118,7 @@ module Response = struct
 
   type get_def_response = (Loc.t, string) result
   type get_imports_response = Loc.t Nel.t Modulename.Map.t SMap.t * SSet.t
+  type get_module_response = (string list, string) result
   type infer_type_response = (
     Loc.t * string option * Reason.t list,
     string
@@ -162,6 +166,7 @@ module Response = struct
   | GEN_FLOW_FILES of gen_flow_files_response
   | GET_DEF of get_def_response
   | GET_IMPORTS of get_imports_response
+  | GET_MODULE of get_module_response
   | INFER_TYPE of infer_type_response
   | PORT of port_response
   | STATUS of status_response
@@ -179,6 +184,7 @@ module Response = struct
   | GEN_FLOW_FILES _ -> "gen_flow_files response"
   | GET_DEF _ -> "get_def response"
   | GET_IMPORTS _ -> "get_imports response"
+  | GET_MODULE _ -> "get_module response"
   | INFER_TYPE _ -> "infer_type response"
   | PORT _ -> "port response"
   | STATUS _ -> "status response"

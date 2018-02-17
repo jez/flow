@@ -18,6 +18,13 @@ let to_string = function
   | LibFile x | SourceFile x | JsonFile x | ResourceFile x -> x
   | Builtins -> "(global)"
 
+let my_to_string = function
+  | LibFile x -> "(LibFile " ^ x ^ ")"
+  | SourceFile x -> "(SourceFile " ^ x ^ ")"
+  | JsonFile x -> "(JsonFile " ^ x ^ ")"
+  | ResourceFile x -> "(ResourceFile " ^ x ^ ")"
+  | Builtins -> "(global)"
+
 let to_path = function
   | LibFile x | SourceFile x | JsonFile x | ResourceFile x -> Ok x
   | Builtins -> Error "File key refers to a builtin"

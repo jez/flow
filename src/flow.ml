@@ -30,6 +30,7 @@ end = struct
     GenFlowFilesCommand.command;
     GetDefCommand.command;
     GetImportsCommand.command;
+    GetModuleCommand.command;
     IdeCommand.command;
     LsCommand.command;
     PortCommand.command;

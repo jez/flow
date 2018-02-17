@@ -17,10 +17,15 @@ end)
 
 let master_sig: Context.cacheable_t option option ref = ref None
 
-let add_sig_context = Expensive.wrap (fun file cx -> SigContextHeap.add file (Context.to_cache cx))
+let add_sig_context = Expensive.wrap (fun file cx ->
+  let _ = print_endline "lmao" in
+  let _ = print_endline (File_key.my_to_string file) in
+  SigContextHeap.add file (Context.to_cache cx))
 
 let add_sig ~audit cx =
   let cx_file = Context.file cx in
+  let _ = print_endline "ayyyyy" in
+  let _ = print_endline (File_key.my_to_string cx_file) in
   if cx_file = File_key.Builtins then master_sig := None;
   add_sig_context ~audit cx_file cx
 

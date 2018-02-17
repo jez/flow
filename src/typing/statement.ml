@@ -1958,6 +1958,8 @@ and export_statement cx loc
             (loc, reason, local, exported)
         in
 
+        Type_inference_hooks_js.dispatch_export_hook cx (loc, remote_name);
+
         (**
           * Determine if we're dealing with the `export {} from` form
           * (and if so, retrieve the ModuleNamespaceObject tvar for the

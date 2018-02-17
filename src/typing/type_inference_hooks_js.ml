@@ -15,6 +15,8 @@ let call_nop _ _ _ _ = ()
 
 let import_nop _ _ _ = ()
 
+let export_nop _ _ = ()
+
 let jsx_nop _ _ _ _ = false
 
 let ref_nop _ _ _ = ()
@@ -87,6 +89,11 @@ type hook_state_t = {
        (Loc.t * string) -> Loc.t ->
        unit);
 
+  export_hook:
+      (Context.t ->
+       (Loc.t * string) ->
+       unit);
+
   jsx_hook:
       (Context.t ->
        string -> Loc.t -> Type.t ->
@@ -118,6 +125,7 @@ let nop_hook_state = {
   member_hook = member_nop;
   call_hook = call_nop;
   import_hook = import_nop;
+  export_hook = export_nop;
   jsx_hook = jsx_nop;
   ref_hook = ref_nop;
   method_decl_hook = method_decl_nop;
@@ -141,6 +149,9 @@ let set_call_hook hook =
 
 let set_import_hook hook =
   hook_state := { !hook_state with import_hook = hook }
+
+let set_export_hook hook =
+  hook_state := { !hook_state with export_hook = hook }
 
 let set_jsx_hook hook =
   hook_state := { !hook_state with jsx_hook = hook }
@@ -174,6 +185,9 @@ let dispatch_call_hook cx name loc this_t =
 
 let dispatch_import_hook cx name loc =
   !hook_state.import_hook cx name loc
+
+let dispatch_export_hook cx name =
+  !hook_state.export_hook cx name
 
 let dispatch_jsx_hook cx name loc this_t =
   !hook_state.jsx_hook cx name loc this_t

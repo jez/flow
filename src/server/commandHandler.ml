@@ -334,6 +334,9 @@ let get_imports ~options module_names =
    * flow. *)
   List.fold_left add_to_results (SMap.empty, SSet.empty) module_names
 
+(* TODO(jez) Is it even worth having this function? *)
+let get_module ~options symbol =
+  GetModule_js.get_module ~options symbol
 
 let handle_ephemeral_unsafe
   genv env (request_id, { ServerProt.Request.client_logging_context=_; command; }) =
@@ -409,6 +412,11 @@ let handle_ephemeral_unsafe
       | ServerProt.Request.GET_IMPORTS module_names ->
           ServerProt.Response.GET_IMPORTS (
             get_imports ~options module_names: ServerProt.Response.get_imports_response
+          ) |> respond;
+          None
+      | ServerProt.Request.GET_MODULE symbol ->
+          ServerProt.Response.GET_MODULE (
+            get_module ~options symbol: ServerProt.Response.get_module_response
           ) |> respond;
           None
       | ServerProt.Request.INFER_TYPE (fn, line, char, verbose) ->
